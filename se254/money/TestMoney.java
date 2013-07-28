@@ -5,6 +5,11 @@ package se254.money;
  * Author: (Akshay Pravin Kalyan, akal881)
  **/
 
+
+/* NOTES
+
+
+ */
 import junit.framework.TestCase;
 
 public class TestMoney extends TestCase {
@@ -17,6 +22,26 @@ public class TestMoney extends TestCase {
 
     public void testNothing() {
         assertEquals(0,0);
+    }
+
+    public void testEquals() {
+        Money m2 = new Money();
+        assertTrue(m.equals(m2));
+
+        // if null object is passed alongside
+        assertFalse(m.equals(null));
+
+        Money a = new Money(5,50);
+        Money b = new Money(5,50,0);
+
+        assertTrue(a.equals(b));
+
+        Money c = new Money();
+        Money d = new Money(0,0,0);
+
+        assertTrue(c.equals(d));
+
+
     }
 
     /**

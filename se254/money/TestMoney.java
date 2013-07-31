@@ -168,19 +168,79 @@ public class TestMoney extends TestCase {
     public void testEquals_EqualMoneyObjects() {
         assertTrue((new Money(12,34,56)).equals(new Money(12,34,56)));
         assertTrue((new Money(0,55,0)).equals(new Money(0,55)));
+
+        assertFalse((new Money(1,2,3)).equals(new Money()));
+
     }
 
     public void testEquals_NonEqualMoneyObjects() {
-        assertFalse((new Money(12,34,56)).equals(new Money(65,43,21)));
-        // test if negative sign is picked up to be different!
-        assertFalse((new Money(-1,50)).equals(new Money(1.50)));
+        // different dollar values
+        assertFalse((new Money(10,11,11)).equals(new Money(20,11,11)));
+        // cents
+        assertFalse((new Money(11,10,11)).equals(new Money(11,20,11)));
+        // hundreths
+        assertFalse((new Money(11,11,10)).equals(new Money(11,11,20)));
+
+
+        // test if negative sign is picked up to be not equal
+        //two input constructor
+        assertFalse((new Money(-1,50)).equals(new Money(1,50)));
+        //three input constructor
+        assertFalse((new Money(12,34,56)).equals(new Money(-12,34,56)));
+
+
     }
 
 //-------------------------------------------------------------------------------
 
+    /* COMPARE TO */
+    // -1 less than | 0 equals | 1 greater than
+
+    public void testCompareTo_EqualObjects() {
+        assertEquals(0, (new Money()).compareTo(new Money(0,0,0)));
+        assertEquals(0, (new Money(0,0)).compareTo(new Money(0,0,0)));
+        assertEquals(0, (new Money(1,2,3)).compareTo(new Money(1,2,3)));
+
+    }
+
+    public void testCompareTo_GreaterThanPositive() {
+        assertEquals(1, (new Money(1,50)).compareTo(new Money(1,49,99)));
+        assertEquals(1, (new Money(0,1,00)).compareTo(new Money(0,0,99)));
+    }
+
+    public void testCompareTo_GreaterThanPosAndNeg() {
+        assertEquals(1, (new Money(1,50)).compareTo(new Money(-1,50)));
+        assertEquals(1, (new Money(1,50)).compareTo(new Money(-2,50,99)));
+    }
+
+    public void testCompareTo_GreaterThanNegative() {
+        assertEquals(1, (new Money(-15,00)).compareTo(new Money(-30,00)));
+        assertEquals(1, (new Money(0,-40,0)).compareTo(new Money(0,-50,0)));
+        assertEquals(1, (new Money(0, 0,-40)).compareTo(new Money(0,0,-50)));
+    }
+
+    public void testCompareTo_LessThanPositive() {
+        assertEquals(-1, (new Money(1,49,99)).compareTo(new Money(1,50)));
+        assertEquals(-1, (new Money(0,0,99)).compareTo(new Money(0,1,00)));
+    }
+
+    public void testCompareTo_LessThanPosAndNeg() {
+        assertEquals(-1, (new Money(-1,50)).compareTo(new Money(1,50)));
+        assertEquals(-1, (new Money(-2,50,99)).compareTo(new Money(1,50)));
+    }
+
+    public void testCompareTo_LessThanNegative() {
+        assertEquals(-1, (new Money(-30,00)).compareTo(new Money(-15,00)));
+        assertEquals(-1, (new Money(0,-50,0)).compareTo(new Money(0,-40,0)));
+        assertEquals(-1, (new Money(0, 0,-50)).compareTo(new Money(0,0,-40)));
+    }
 
 
+    public void testCompareTo_() {
+        assertEquals(-1, (new Money(0,-50)).compareTo(new Money(0,50)));
+        assertEquals(-1, (new Money(0,0,-50)).compareTo(new Money(0,0,50)));
 
+    }
 
 
 

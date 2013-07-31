@@ -7,7 +7,7 @@ package se254.money;
 
 
 /* NOTES
-
+remove tests which use both constructors - not neccessary as you are already testing constructors seperately??1!
 
  */
 import junit.framework.TestCase;
@@ -123,7 +123,7 @@ public class TestMoney extends TestCase {
     }
 
 
-
+//-------------------------------------------------------------------------------
 
 
     /* TO STRING */
@@ -242,6 +242,117 @@ public class TestMoney extends TestCase {
 
     }
 
+//-------------------------------------------------------------------------------
+
+    /* ADD */
+
+    public void testAdd_Zero() {
+        assertEquals("$0.00", ((new Money(0,0,0)).add(new Money(0,0,0))).toString());
+        assertEquals("$0.00", ((new Money(0,0)).add(new Money(0,0))).toString());
+
+        assertEquals("$12.3456", ((new Money(12,34,56)).add(new Money(0,0,0))).toString());
+        assertEquals("$12.34", ((new Money(12,34)).add(new Money(0,0,0))).toString());
+
+        // reverse order
+        assertEquals("$12.3456", ((new Money(0,0,0)).add(new Money(12,34,56))).toString());
+        assertEquals("$12.34", ((new Money(0,0,0)).add(new Money(12,34))).toString());
+    }
+
+    public void testAdd_PositivePlusPositive() {
+        assertEquals("$20.00", ((new Money(10,00)).add(new Money(10,00))).toString());
+        assertEquals("$0.20", ((new Money(0,10)).add(new Money(0,10))).toString());
+
+        assertEquals("$20.00", ((new Money(10,0,0)).add(new Money(10,0,0))).toString());
+        assertEquals("$1.10", ((new Money(0,55,0)).add(new Money(0,55,0))).toString());
+        assertEquals("$0.011", ((new Money(0,0,55)).add(new Money(0,0,55))).toString());
+
+        assertEquals("$24.6912", ((new Money(12,34,56)).add(new Money(12,34,56))).toString());
+        assertEquals("$0.6912", ((new Money(0,34,56)).add(new Money(0,34,56))).toString());
+        assertEquals("$24.0112", ((new Money(12,0,56)).add(new Money(12,0,56))).toString());
+    }
+
+    public void testAdd_PositivePlusNegative() {
+        // different ordering of negative values
+        assertEquals("-$20.00", ((new Money(10,00)).add(new Money(-30,00))).toString());
+        assertEquals("-$20.00", ((new Money(-30,00)).add(new Money(10,00))).toString());
+
+        assertEquals("-$0.20", ((new Money(0,10)).add(new Money(0,-30))).toString());
+        assertEquals("-$0.20", ((new Money(0,-30)).add(new Money(0,10))).toString());
+
+        assertEquals("$0.0044", ((new Money(0,0,-55)).add(new Money(0,0,99))).toString());
+        assertEquals("-$0.0044", ((new Money(0,0,55)).add(new Money(0,0,-99))).toString());
+
+
+        assertEquals("-$66.5645", ((new Money(12,34,56)).add(new Money(-78,91,01))).toString());
+        assertEquals("$0.00", ((new Money(0,-34,56)).add(new Money(0,34,56))).toString());
+        assertEquals("$98.9898", ((new Money(99,99,99)).add(new Money(-1,1,1))).toString());
+        assertEquals("-$99.9999", ((new Money(-100,0,0)).add(new Money(0,0,1))).toString());
+    }
+
+    public void testAdd_NegativePlusNegative() {
+        assertEquals("-$20.00", ((new Money(-10,00)).add(new Money(-10,00))).toString());
+        assertEquals("-$0.20", ((new Money(0,-10)).add(new Money(0,-10))).toString());
+
+        assertEquals("-$20.00", ((new Money(-10,0,0)).add(new Money(-10,0,0))).toString());
+        assertEquals("-$1.10", ((new Money(0,-55,0)).add(new Money(0,-55,0))).toString());
+        assertEquals("-$0.011", ((new Money(0,0,-55)).add(new Money(0,0,-55))).toString());
+
+        assertEquals("-$24.6912", ((new Money(-12,34,56)).add(new Money(-12,34,56))).toString());
+        assertEquals("-$0.6912", ((new Money(0,-34,56)).add(new Money(0,-34,56))).toString());
+        assertEquals("-$24.0112", ((new Money(-12,0,56)).add(new Money(-12,0,56))).toString());
+    }
+
+//-------------------------------------------------------------------------------
+
+    /* MULTIPLY */
+
+    public void testMultiply_ByZero() {
+        assertEquals("$0.00", ((new Money(0,0,0)).multiply(0.0)).toString());
+        assertEquals("$0.00", ((new Money(20,0,0)).multiply(0.0)).toString());
+        assertEquals("$0.00", ((new Money(0,30,0)).multiply(0.0)).toString());
+        assertEquals("$0.00", ((new Money(0,0,40)).multiply(0.0)).toString());
+        assertEquals("$0.00", ((new Money(0,0,40)).multiply(0.0)).toString());
+    }
+
+    public void testMultiply_PositiveFactors() {
+        assertEquals("$4.0815", ((new Money(4,8,15)).multiply(1.0)).toString());
+        assertEquals("$40.815", ((new Money(4,8,15)).multiply(10.0)).toString());
+        assertEquals("-$65.304", ((new Money(-4,8,15)).multiply(16.0)).toString());
+        assertEquals("$67.3448", ((new Money(4,8,15)).multiply(16.5)).toString());
+    }
+
+    public void testMultiply_NegativeFactors() {
+                                                                            // BADJ.jar fails with negative factors!
+        assertEquals("-$4.0815", ((new Money(4,8,15)).multiply(-1.0)).toString());
+        assertEquals("-$40.815", ((new Money(4,8,15)).multiply(-10.0)).toString());
+        assertEquals("$65.304", ((new Money(-4,8,15)).multiply(-16.0)).toString());
+
+        assertEquals("-$67.3447", ((new Money(4,8,15)).multiply(-16.5)).toString());
+    }
+
+
+
+
+
+
+
+    public void testMultiply_RoundingToNearestHundreth() {
+        //0.00055
+        assertEquals("$0.0006", ((new Money(0,0,55)).multiply(0.1)).toString());
+        //0.00025
+        assertEquals("$0.0003", ((new Money(0,0,50)).multiply(0.05)).toString());
+        //0.000025
+        assertEquals("$0.00", ((new Money(0,0,50)).multiply(0.005)).toString());
+
+        //0.000050
+        assertEquals("$0.0001", ((new Money(0,0,50)).multiply(0.01)).toString());
+
+        assertEquals("$0.00", ((new Money(49,99,99)).multiply(0.000001)).toString());
+        assertEquals("$0.0001", ((new Money(99,99,99)).multiply(0.000001)).toString());
+    }
+
+
+
 
 
 
@@ -257,6 +368,7 @@ public class TestMoney extends TestCase {
         junit.textui.TestRunner.run(TestMoney.class);
     }
 }
+
 
 
 

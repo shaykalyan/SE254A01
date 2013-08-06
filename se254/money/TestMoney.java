@@ -6,9 +6,9 @@ package se254.money;
  **/
 
 
-/* NOTES
-
- */
+/*
+*
+*/
 import junit.framework.TestCase;
 
 import java.lang.Exception;
@@ -62,7 +62,7 @@ public class TestMoney extends TestCase {
     /**
      * This test case deals with the the occasion that a negative argument is provided following a non zero. The
      * input causes an exception to be thrown which is checked in this case. If not thrown,
-     * a fail assertion is the final result.
+     * a fail is the final result.
      */
     public void testConstructorTwoPara_NegativeAfterNonZero() {
         try {
@@ -78,7 +78,7 @@ public class TestMoney extends TestCase {
      * working according to the specifications
      */
     public void testConstructorTwoPara_NegativeAfterZero() {
-            Money a = new Money(0,-50);
+        assertEquals("-$0.50", (new Money(0,-50)).toString());
     }
 
     /**
@@ -131,7 +131,6 @@ public class TestMoney extends TestCase {
      * Testcase to ensure valid inputs construct 'correct' Money objects within the valid bounds.
      */
     public void testConstructorTwoPara_InputValueRange_ValidBounds() {
-        assertEquals("$0.00", (new Money(0, 0)).toString());
         assertEquals("-$0.99", (new Money(0, -99)).toString());
         assertEquals("$0.99", (new Money(0, 99)).toString());
     }
@@ -147,18 +146,18 @@ public class TestMoney extends TestCase {
     }
 
     /**
-     * Simple test case of a valid constructor call to ensure the correct Money object is returned
-     */
-    public void testConstructorThreePara_PositiveAmount() {
-        assertEquals("$1.0203", (new Money(1,2,3)).toString());
-    }
-
-    /**
      * This is a simple test to ensure that the three argument constructor handles a negative zero the same as a
      * regular zero and returns a Money object representing zero dollars.
      */
     public void testConstructorThreePara_NegativeZeroDollars() {
         assertEquals("$0.00", (new Money(-0,0,0)).toString());
+    }
+
+    /**
+     * Simple test case of a valid constructor call to ensure the correct Money object is returned
+     */
+    public void testConstructorThreePara_PositiveAmount() {
+        assertEquals("$1.0203", (new Money(1,2,3)).toString());
     }
 
     /**
@@ -179,7 +178,7 @@ public class TestMoney extends TestCase {
      * This test case deals with the the occasion that a negative argument is provided following a non zero.
      * Specifically with a zero trailing input (cents). The
      * input causes an exception to be thrown which is checked in this case. If not thrown,
-     * a fail assertion is the result of the test.
+     * a fail is the result of the test.
      */
     public void testConstructorThreePara_NegativeAfterNonZero_CentsHasNeg_TrailingZero() {
         try {
@@ -257,7 +256,6 @@ public class TestMoney extends TestCase {
      *  Testcase to ensure valid inputs construct 'correct' Money objects within the valid bounds.
      */
     public void testConstructorThreePara_InputValueRange_ValidBounds()  {
-        assertEquals("$0.00", (new Money(0, 0,0)).toString());
         assertEquals("-$0.9999", (new Money(0, -99,99)).toString());
         assertEquals("$0.9999", (new Money(0, 99,99)).toString());
     }
@@ -379,6 +377,10 @@ public class TestMoney extends TestCase {
     /**
      * Testcase to ensure the equals method returns a false boolean when a null argument is passed to test equality
      */
+    public void testEquals_NullArgument() {
+        assertFalse((new Money()).equals(null));
+    }
+
     public void testEquals_NullArgument() {
         assertFalse((new Money()).equals(null));
     }
@@ -572,7 +574,6 @@ public class TestMoney extends TestCase {
         assertEquals("$1.10", ((new Money(0,55,0)).add(new Money(0,55,0))).toString());
         assertEquals("$0.011", ((new Money(0,0,55)).add(new Money(0,0,55))).toString());
 
-        assertEquals("$24.6912", ((new Money(12,34,56)).add(new Money(12,34,56))).toString());
         assertEquals("$0.6912", ((new Money(0,34,56)).add(new Money(0,34,56))).toString());
         assertEquals("$24.0112", ((new Money(12,0,56)).add(new Money(12,0,56))).toString());
         assertEquals("$24.68", ((new Money(12,34,0)).add(new Money(12,34,0))).toString());
@@ -621,7 +622,6 @@ public class TestMoney extends TestCase {
      * zero
      */
     public void testMultiply_ByZero() {
-        assertEquals("$0.00", ((new Money(0,0,0)).multiply(0.0)).toString());
         assertEquals("$0.00", ((new Money(55,0,0)).multiply(0.0)).toString());
         assertEquals("$0.00", ((new Money(0,55,0)).multiply(0.0)).toString());
         assertEquals("$0.00", ((new Money(0,0,55)).multiply(0.0)).toString());

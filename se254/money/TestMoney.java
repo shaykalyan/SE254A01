@@ -258,6 +258,8 @@ public class TestMoney extends TestCase {
     public void testConstructorThreePara_InputValueRange_ValidBounds()  {
         assertEquals("-$0.9999", (new Money(0, -99,99)).toString());
         assertEquals("$0.9999", (new Money(0, 99,99)).toString());
+        assertEquals("$999999999.9999", (new Money(999999999,99,99)).toString());
+        assertEquals("-$999999999.9999", (new Money(-999999999,99,99)).toString());
     }
 
     /**
@@ -377,10 +379,6 @@ public class TestMoney extends TestCase {
     /**
      * Testcase to ensure the equals method returns a false boolean when a null argument is passed to test equality
      */
-    public void testEquals_NullArgument() {
-        assertFalse((new Money()).equals(null));
-    }
-
     public void testEquals_NullArgument() {
         assertFalse((new Money()).equals(null));
     }

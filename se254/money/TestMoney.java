@@ -1,34 +1,25 @@
 package se254.money;
 /**
- * SOFTENG 254 2011 Assignment 1 submission
+ * SOFTENG 254 2013 Assignment 1 Submission
  *
- * Author: (Akshay Pravin Kalyan, akal881)
+ * Author: (Akshay Pravin Kalyan, akal881, 5786866)
  **/
 
-
-/*
-*
-*/
 import junit.framework.TestCase;
-
 import java.lang.Exception;
 import java.lang.IllegalArgumentException;
 
 public class TestMoney extends TestCase {
-    private Money m;
 
-    // Your tests here.
-    protected void setUp() {
-        m = new Money();
-    }
-
-//-------------------------------------------------------------------------------       /* CONSTRUCTORS */
+//===============================================================================
+//                                  CONSTRUCTORS
+//===============================================================================
 
     /* DEFAULT */
 
     /**
      * This is a simple test to ensure that the default (zero argument) constructor creates and returns a Money
-     * object with the value of zero dollars only
+     * object with the value of zero dollars only.
      */
     public void testConstructorDefault() {
         assertEquals("$0.00", (new Money()).toString());
@@ -38,7 +29,7 @@ public class TestMoney extends TestCase {
 
     /**
      * This is a simple test to ensure that the two argument constructor creates and returns a Money
-     * object with the value of zero dollars only when passed in two zero
+     * object with the value of zero dollars only when passed in two zeros.
      */
     public void testConstructorTwoPara_ZeroDollars() {
         assertEquals("$0.00", (new Money(0,0)).toString());
@@ -60,6 +51,13 @@ public class TestMoney extends TestCase {
     }
 
     /**
+     * Simple test case of a valid constructor call to ensure the correct Money object is returned - negative value
+     */
+    public void testConstructorTwoPara_NegativeAmount() {
+        assertEquals("-$1.50", (new Money(-1,50).toString()));
+    }
+
+    /**
      * This test case deals with the the occasion that a negative argument is provided following a non zero. The
      * input causes an exception to be thrown which is checked in this case. If not thrown,
      * a fail is the final result.
@@ -70,7 +68,7 @@ public class TestMoney extends TestCase {
             fail("Expected IllegalArgumentException with the msg -- Invalid: negative after non-zero");
         } catch (IllegalArgumentException e) {
             assertEquals("Invalid: negative after non-zero", e.getMessage());
-}
+        }
     }
 
     /**
@@ -90,11 +88,12 @@ public class TestMoney extends TestCase {
 
     /**
      * Testcase to ensure that the constructor handles correctly when more than one negative argument is included.
-     * The constructor should cause an exception to be thrown.
+     * The constructor should cause an exception to be thrown. NOTE: MORE THAN ONE NEGATIVE exception is thrown
+     * before 'negative after non zero exception'.
      */
     public void testConstructorTwoPara_MoreThanOneNegative() {
         try {
-            Money d = new Money(-1,-50);
+            Money m = new Money(-1,-50);
             fail("Expected IllegalArgumentException with the msg -- Invalid: more than one negative value");
         } catch (IllegalArgumentException e) {
             assertEquals("Invalid: more than one negative value", e.getMessage());
@@ -132,6 +131,7 @@ public class TestMoney extends TestCase {
      */
     public void testConstructorTwoPara_InputValueRange_ValidBounds() {
         assertEquals("-$0.99", (new Money(0, -99)).toString());
+        assertEquals("$0.50", (new Money(0, 50)).toString());
         assertEquals("$0.99", (new Money(0, 99)).toString());
     }
 
@@ -161,6 +161,13 @@ public class TestMoney extends TestCase {
     }
 
     /**
+     * Simple test case of a valid constructor call to ensure the correct Money object is returned - negative
+     */
+    public void testConstructorThreePara_NegativeAmount() {
+        assertEquals("-$1.0203", (new Money(-1,2,3)).toString());
+    }
+
+    /**
      * Testcase to ensure a negative zero for the dollar argument does not affect the resulting Money object
      */
     public void testConstructorThreePara_NonNegativeAfterNegativeZero_NegativeZeroDollars() {
@@ -176,9 +183,8 @@ public class TestMoney extends TestCase {
 
     /**
      * This test case deals with the the occasion that a negative argument is provided following a non zero.
-     * Specifically with a zero trailing input (cents). The
-     * input causes an exception to be thrown which is checked in this case. If not thrown,
-     * a fail is the result of the test.
+     * Specifically with a zero trailing input (cents). The input causes an exception to be thrown which is checked in
+     * this case. If not thrown, a fail is the result of the test.
      */
     public void testConstructorThreePara_NegativeAfterNonZero_CentsHasNeg_TrailingZero() {
         try {
@@ -218,23 +224,35 @@ public class TestMoney extends TestCase {
 
     /**
      * This test case deals with the the occasion that more than one negative argument is provided,
-     * All Combinations of the placement of two negative arguments are tested.
+     * This combination contains negative cents and hundreths
      */
-    public void testConstructorThreePara_MoreThanOneNegative() {
+    public void testConstructorThreePara_MoreThanOneNegative_NegativeCentsAndHundreths() {
         try {
             Money a = new Money(0,-1,-2);
             fail("Expected IllegalArgumentException with the msg -- Invalid: more than one negative value");
         } catch (IllegalArgumentException e) {
             assertEquals("Invalid: more than one negative value", e.getMessage());
         }
+    }
 
+    /**
+     * This test case deals with the the occasion that more than one negative argument is provided,
+     * This combination contains negative dollars and hundreths
+     */
+    public void testConstructorThreePara_MoreThanOneNegative_NegativeDollarsAndHundreths() {
         try {
             Money a = new Money(-1,0,-2);
             fail("Expected IllegalArgumentException with the msg -- Invalid: more than one negative value");
         } catch (IllegalArgumentException e) {
             assertEquals("Invalid: more than one negative value", e.getMessage());
         }
+    }
 
+    /**
+     * This test case deals with the the occasion that more than one negative argument is provided,
+     * This combination contains negative dollars and cents
+     */
+    public void testConstructorThreePara_MoreThanOneNegative_NegativeDollarsAndCents() {
         try {
             Money a = new Money(-1,-2,0);
             fail("Expected IllegalArgumentException with the msg -- Invalid: more than one negative value");
@@ -316,7 +334,9 @@ public class TestMoney extends TestCase {
 
 
 
-//-------------------------------------------------------------------------------       /* TO STRING */
+//===============================================================================
+//                                  TO STRING
+//===============================================================================
 
 
     /**
@@ -351,17 +371,24 @@ public class TestMoney extends TestCase {
     /**
      * Test case to ensure the maximum possible integer value is generated correctly as a string
      */
-    public void testToString_MaximumValue() {
-        assertEquals("$2147483647.00", (new Money(2147483647,0,0)).toString());
+    public void testToString_MaximumDefinedValue() {
+        assertEquals("$999999999.9999", (new Money(999999999,99,99)).toString());
     }
 
+    /**
+     * Test case to ensure the maximum possible integer value is generated correctly as a string
+     */
+    public void testToString_MinimumDefinedValue() {
+        assertEquals("-$999999999.9999", (new Money(-999999999,99,99)).toString());;
+    }
 
-//-------------------------------------------------------------------------------       /* EQUALS */
-
+//===============================================================================
+//                                  EQUALS
+//===============================================================================
 
     /**
      * Simple test to ensure equals responds correctly for identical Money objects regardless of constructor used to
-     * construct them
+     * construct them. Constructing Zero
      */
     public void testEquals_DifferentConstructors_ZeroDollars() {
         assertTrue((new Money()).equals(new Money(0,0)));
@@ -370,7 +397,7 @@ public class TestMoney extends TestCase {
 
     /**
      * Simple test to ensure equals responds correctly for identical Money objects regardless of constructor used to
-     * construct them
+     * construct them. Constructing and comparing non zero Money objects.
      */
     public void testEquals_DifferentConstructors_SameMoneyValue() {
         assertTrue((new Money(55,55)).equals(new Money(55,55,0)));
@@ -440,17 +467,21 @@ public class TestMoney extends TestCase {
         assertFalse((new Money(-12,34,56)).equals(new Money(12,34,56)));
     }
 
-//-------------------------------------------------------------------------------       /* COMPARE TO */
+//===============================================================================
+//                                  COMPARE TO
+//===============================================================================
 
     /**
-     * Test case to ensure that a comparison result ("Returns... 1 [otherwise]" as per Money javaDoc) is not returned
-     * when a Money object is compared against a null object
+     * Test case to ensure that when a Money object is compared against a null object,
+     * an exception is thrown to express this.
      */
     public void testCompareTo_NullArgument() {
        try {
            int result = (new Money()).compareTo(null);
-           fail("Expected Exception to be thrown when compared against null object");
-       } catch (Exception e) {}
+           fail("Expected IllegalArgumentException with the msg -- Invalid: null argument");
+       } catch (Exception e) {
+           assertEquals("Invalid: null argument", e.getMessage());
+       }
     }
 
     /**
@@ -461,7 +492,6 @@ public class TestMoney extends TestCase {
         assertEquals(0, (new Money()).compareTo(new Money(0,0,0)));
         assertEquals(0, (new Money(0,0)).compareTo(new Money(0,0,0)));
         assertEquals(0, (new Money(1,2,3)).compareTo(new Money(1,2,3)));
-
     }
 
     /**
@@ -469,7 +499,7 @@ public class TestMoney extends TestCase {
      * compared against greater in value. Values picked to compare result in the comparison to be made across dollars,
      * cents and hundreths.
      */
-    public void testCompareTo_GreaterThan_Positives() {
+    public void testCompareTo_GreaterThan_PositiveMoney() {
         assertEquals(1, (new Money(1,50)).compareTo(new Money(1,49,99)));
         assertEquals(1, (new Money(0,1,00)).compareTo(new Money(0,0,99)));
     }
@@ -479,7 +509,7 @@ public class TestMoney extends TestCase {
      * beign compared against greater in value. A case of money objects having the same absolute value but with
      * differing signs.
      */
-    public void testCompareTo_GreaterThan_PosAndNeg() {
+    public void testCompareTo_GreaterThan_PosAndNegMoney() {
         assertEquals(1, (new Money(1,50)).compareTo(new Money(-1,50)));
         assertEquals(1, (new Money(1,50)).compareTo(new Money(-2,50,99)));
     }
@@ -489,7 +519,7 @@ public class TestMoney extends TestCase {
      * being compared against greater in value. Values picked to compare result in the comparison to be made across
      * dollars,cents and hundreths.
      */
-    public void testCompareTo_GreaterThan_Negative() {
+    public void testCompareTo_GreaterThan_NegativeMoney() {
         assertEquals(1, (new Money(-15,00)).compareTo(new Money(-30,00)));
         assertEquals(1, (new Money(0,-40,0)).compareTo(new Money(0,-40,40)));
         assertEquals(1, (new Money(0, 0,-40)).compareTo(new Money(0,0,-50)));
@@ -500,7 +530,7 @@ public class TestMoney extends TestCase {
      * compared against lower in value. Values picked to compare result in the comparison to be made across dollars,
      * cents and hundreths.
      */
-    public void testCompareTo_LessThan_Positive() {
+    public void testCompareTo_LessThan_PositiveMoney() {
         assertEquals(-1, (new Money(1,49,99)).compareTo(new Money(1,50)));
         assertEquals(-1, (new Money(0,0,99)).compareTo(new Money(0,1,00)));
     }
@@ -510,7 +540,7 @@ public class TestMoney extends TestCase {
      * beign compared against lower in value. A case of money objects having the same absolute value but with
      * differing signs.
      */
-    public void testCompareTo_LessThan_PosAndNeg() {
+    public void testCompareTo_LessThan_PosAndNegMoney() {
         assertEquals(-1, (new Money(-1,50)).compareTo(new Money(1,50)));
         assertEquals(-1, (new Money(-2,50,99)).compareTo(new Money(1,50)));
     }
@@ -520,14 +550,16 @@ public class TestMoney extends TestCase {
      * being compared against greater in value. Values picked to compare result in the comparison to be made across
      * dollars,cents and hundreths.
      */
-    public void testCompareTo_LessThan_Negative() {
+    public void testCompareTo_LessThan_NegativeMoney() {
         assertEquals(-1, (new Money(-30,00)).compareTo(new Money(-15,00)));
         assertEquals(-1, (new Money(0,-40,40)).compareTo(new Money(0,-40,0)));
         assertEquals(-1, (new Money(0, 0,-50)).compareTo(new Money(0,0,-40)));
     }
 
 
-//-------------------------------------------------------------------------------            /* ADD */
+//===============================================================================
+//                                  ADD
+//===============================================================================
 
     /**
      * Testcase to ensure the add method throws an exception if a null object is attempted to be added to a Money
@@ -562,7 +594,8 @@ public class TestMoney extends TestCase {
 
     /**
      * Test case to test the addition of positive Money objects. Placement of values (Dollars,
-     * Cents or Hundreths) is varied to ensure multiple combinations are covered.
+     * Cents or Hundreths) is varied to ensure multiple combinations are covered. Test includes case which involves
+     * carry.
      */
     public void testAdd_PositivePlusPositive() {
         assertEquals("$20.00", ((new Money(10,00)).add(new Money(10,00))).toString());
@@ -575,6 +608,8 @@ public class TestMoney extends TestCase {
         assertEquals("$0.6912", ((new Money(0,34,56)).add(new Money(0,34,56))).toString());
         assertEquals("$24.0112", ((new Money(12,0,56)).add(new Money(12,0,56))).toString());
         assertEquals("$24.68", ((new Money(12,34,0)).add(new Money(12,34,0))).toString());
+
+        assertEquals("$100.00", ((new Money(99,99,99)).add(new Money(0,0,1))).toString());
     }
 
     /**
@@ -598,7 +633,8 @@ public class TestMoney extends TestCase {
 
     /**
      * Test case to test the addition of negative Money objects. Placement of values (Dollars,
-     * Cents or Hundreths) is varied to ensure multiple combinations are covered.
+     * Cents or Hundreths) is varied to ensure multiple combinations are covered. Test includes case which involves
+     * carry.
      */
     public void testAdd_NegativePlusNegative() {
         assertEquals("-$20.00", ((new Money(-10,00)).add(new Money(-10,00))).toString());
@@ -611,9 +647,17 @@ public class TestMoney extends TestCase {
         assertEquals("-$0.6912", ((new Money(0,-34,56)).add(new Money(0,-34,56))).toString());
         assertEquals("-$24.0112", ((new Money(-12,0,56)).add(new Money(-12,0,56))).toString());
         assertEquals("-$24.68", ((new Money(-12,34,0)).add(new Money(-12,34,0))).toString());
+
+        assertEquals("-$100.00", ((new Money(-99,99,99)).add(new Money(0,0,-1))).toString());
     }
 
-//-------------------------------------------------------------------------------       /* MULTIPLY */
+//    public void testAdd_UpToMaximumDefinedValue() {
+//        assertEquals("$999999999.9999", ((new Money(500000000,00,00)).add(new Money(499999999,99,99))).toString());
+//    }
+
+//===============================================================================
+//                                  MULTIPLY
+//===============================================================================
 
     /**
      * Test case to ensure multiplying any Money object by a factor of zero results in a Money object with the value
@@ -660,98 +704,39 @@ public class TestMoney extends TestCase {
     }
 
     /**
-     * Test several cases by multiplying Money objects by fractional factors to ensure correct rounding is applied.
+     * Test cases by multiplying Money objects by fractional factors to ensure correct rounding up is taking place.
      */
-    public void testMultiply_RoundingToNearestHundreth() {
-        //0.00055
+    public void testMultiply_RoundingToNearestHundreth_RoundUp() {
         assertEquals("$0.0006", ((new Money(0,0,55)).multiply(0.1)).toString());
-        //0.000025
-        assertEquals("$0.00", ((new Money(0,0,50)).multiply(0.005)).toString());
+        assertEquals("$0.0001", ((new Money(99,99,99)).multiply(0.000001)).toString());
+    }
 
-        //0.000050
+    /**
+     * Test cases by multiplying Money objects by fractional factors to ensure correct rounding down is taking place.
+     */
+    public void testMultiply_RoundingToNearestHundreth_RoundDown() {
+        assertEquals("$0.00", ((new Money(0,0,50)).multiply(0.005)).toString());
+        assertEquals("$0.00", ((new Money(49,99,99)).multiply(0.000001)).toString());
+    }
+
+    /**
+     * Test cases by multiplying Money objects by fractional factors to ensure correct rounding is taking place at
+     * tie breaks. Correct rounding when tie breaking is always away from zero. Also checks if the placement of sign
+     * does not affect the final answer when rounding.
+     */
+    public void testMultiply_RoundingToNearestHundreth_RoundTieBreak() {
         assertEquals("$0.0001", ((new Money(0,0,50)).multiply(0.01)).toString());
         assertEquals("-$0.0001", ((new Money(0,0,-50)).multiply(0.01)).toString());
 
-        assertEquals("$0.00", ((new Money(49,99,99)).multiply(0.000001)).toString());
-        assertEquals("$0.0001", ((new Money(99,99,99)).multiply(0.000001)).toString());
-
-
-
-        //67.34475 -- full result
-
         assertEquals("-$67.3448", ((new Money(-4,8,15)).multiply(16.5)).toString());
-
-        // fails rounds to .3447
-//        assertEquals("-$67.3448", ((new Money(4,8,15)).multiply(-16.5)).toString());
-
-        assertEquals("$67.3447", ((new Money(-4,8,15)).multiply(-16.5)).toString());
+        assertEquals("-$67.3448", ((new Money(4,8,15)).multiply(-16.5)).toString());
     }
+
+//===============================================================================
+//                                  MAIN!
+//===============================================================================
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(TestMoney.class);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-shay@Zane ~/Dropbox/Uni/Semester II/SOFTENG 254/Assignments/Assignment 01/SE254A01 $ javac -cp junit.jar:badA.jar:. se254/money/TestMoney.java
-shay@Zane ~/Dropbox/Uni/Semester II/SOFTENG 254/Assignments/Assignment 01/SE254A01 $ java -cp junit.jar:badA.jar:. se254/money/TestMoney
-.
-Time: 0.002
-
-OK (1 test)
-*/
